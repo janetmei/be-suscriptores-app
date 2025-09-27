@@ -6,12 +6,20 @@ import userRouter from './config/routes/user.routes.js';
 import authRouter from './config/routes/auth.routes.js';
 import subscriptionRouter from './config/routes/subscription.routes.js';
 import connectToDatabase from './database/mongodb.js';
+import errorMiddleware from './middlewares/error.middleware.js';
+import cookieParser from 'cookie-parser';
 
 const app = express();
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser ());
 
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/user', userRouter);
 app.use('/api/v1/subscription', subscriptionRouter);
+
+app.use(errorMiddleware);
 
 app.get('/', (req, res) => {
     res.send('Bienvenido a la API de seguimiento de suscripciones');
@@ -23,4 +31,3 @@ app.listen(PORT, async() => {
 });
 
 export default app;
-
